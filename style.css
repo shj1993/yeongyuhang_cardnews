@@ -17,8 +17,8 @@ html, body {
     justify-content: center;
     align-items: center;
     aspect-ratio: 1 / 1; /* ⭐ 1:1 비율로 고정 ⭐ */
-    max-width: 550px; /* ⭐ 최대 너비 설정 ⭐ */
-    max-height: 550px; /* ⭐ 최대 높이 설정 ⭐ */
+    max-width: 400px; /* ⭐ 최대 너비 설정 ⭐ */
+    max-height: 400px; /* ⭐ 최대 높이 설정 ⭐ */
     background-color: #eee;
     position: relative;
 }
@@ -329,3 +329,4 @@ html, body {
     border-radius: 10px;
 
 }
+
