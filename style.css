@@ -3,6 +3,9 @@
 /* --- 기본 & 공통 스타일 --- */
 body {
     margin: 0;
+    padding: 0; /* body의 기본 패딩/마진 제거 강화 */
+    width: 100vw; /* 뷰포트 너비 100% */
+    height: 100vh; /* 뷰포트 높이 100% */
     font-family: 'Helvetica Neue', Arial, sans-serif;
     background-color: #f4f4f4;
     color: #333;
@@ -12,9 +15,9 @@ body {
 
 /* 카드 컨테이너 전체를 화면 중앙에 고정하고 여백(레터박싱) 생성 */
 #card-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
+    position: relative; /* 자식 요소 절대 위치 기준 */
+    width: 100%; /* body 기준 100% */
+    height: 100%; /* body 기준 100% */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,10 +29,11 @@ body {
 .card {
     position: absolute; /* 카드들을 겹치게 배치 */
     
-    /* ⭐⭐⭐핵심 수정: 카드들을 정확히 중앙으로 정렬!⭐⭐⭐ */
+    /* ⭐⭐⭐ 카드들을 정확히 중앙으로 강제 정렬!⭐⭐⭐ */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); /* 요소의 절반 너비/높이만큼 되돌려서 정확히 중앙 정렬 */
+    z-index: 5; /* 기본 z-index, active가 되면 더 높아짐 */
 
     opacity: 0; /* 기본적으로 숨김 */
     transition: opacity 0.5s ease-in-out; /* 부드러운 전환 */
@@ -64,6 +68,11 @@ body {
     height: 100%; /* .card-content 크기를 꽉 채움 */
     object-fit: cover; /* ⭐⭐ 이미지 비율을 유지하며 .card-content를 꽉 채움 (잘려도 좋으니 빈 공간 없음) ⭐⭐ */
     display: block;
+}
+
+/* ⭐⭐ hidden-text가 공간을 차지하지 않도록 완벽히 숨김! ⭐⭐ */
+.hidden-text {
+    display: none;
 }
 
 /* 텍스트 및 버튼을 위한 오버레이 요소들 */
@@ -208,6 +217,11 @@ body {
     bottom: 1.8%; /* (20/1080)*100% */
     left: 50%;
     transform: translateX(-50%); /* 중앙 정렬 */
+    
+    /* ⭐⭐ 핵심 수정: 너비를 명시하여 버튼들이 충분히 커질 수 있도록 함! ⭐⭐ */
+    width: 60%; /* ⭐⭐ 카드 너비의 60%를 차지하도록 명시! (희주가 조정) ⭐⭐ */
+    /* max-width: 90%; // 이젠 width를 명시했으므로 필요 없음 */
+
     display: flex; /* 내부 요소 나란히 배치 */
     gap: 1.8%; /* 버튼 사이 간격 (20px / 1080px * 100%) */
     pointer-events: auto; /* 이 그룹 내의 버튼 클릭 가능하게 */
@@ -219,8 +233,15 @@ body {
 /* --- 하단 중앙에 나란히 배치되는 버튼들의 개별 스타일 --- */
 .bottom-centered-buttons .fixed-btn { /* 이 버튼들은 .fixed-btn 클래스도 가지지만, 여기서는 .bottom-centered-buttons의 자식으로 한 번 더 명시 */
     position: relative; /* 부모 .bottom-centered-buttons 기준으로 상대 위치 */
-    min-width: 15%; /* ⭐⭐ 최소 너비 설정 ⭐⭐ */
-    max-width: 25%; /* 최대 너비도 설정 (너무 커지지 않도록) */
+    
+    /* ⭐⭐ 핵심 수정: width를 명시적으로 부여하고, flex-shrink로 줄어드는 것만 방지! ⭐⭐ */
+    width: 33%; /* ⭐⭐ 이 비율을 조절하여 버튼 개별 너비 조정! (버튼 3개면 33%, 2개면 50% 등) ⭐⭐ */
+    flex-shrink: 0; /* 버튼이 컨테이너 크기에 의해 찌그러지지 않도록 방지 */
+    
+    /* min-width, max-width는 필요하면 여기다 넣어주세요! */
+    min-width: 80px; /* ⭐⭐ 픽셀 단위로 최소 너비를 설정 (버튼이 너무 작아지지 않도록) ⭐⭐ */
+    max-width: 200px; /* ⭐⭐ 픽셀 단위로 최대 너비를 설정 (버튼이 너무 커지지 않도록) ⭐⭐ */
+
     height: 4.6%; /* (50/1080)*100% */
     font-size: 1.9%;
     padding: 1% 2%;
@@ -228,14 +249,14 @@ body {
     transform: none; /* 이전 transform 제거 */
 }
 
-/* ⭐⭐⭐ 희주가 좋아했던 초록색 복구! (선택자를 더 구체적으로!) ⭐⭐⭐ */
-.bottom-centered-buttons .apply-btn { /* ⭐⭐ 여기 선택자를 더 구체적으로 바꿔서 우선순위 확보! ⭐⭐ */
+/* ⭐⭐⭐ 신청하기 버튼 초록색 복구! (선택자를 더 구체적으로!) ⭐⭐⭐ */
+.bottom-centered-buttons .apply-btn {
     background-color: rgba(40, 167, 69, 0.8); /* 신청하기는 초록색 */
 }
 
 .qr-code-btn {
     background-color: rgba(255, 193, 7, 0.9); /* QR 확대하기는 노란색 계열 */
-    color: #333;
+    color: white;
 }
 
 
