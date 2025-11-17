@@ -25,6 +25,12 @@ body {
 /* 개별 카드 스타일 */
 .card {
     position: absolute; /* 카드들을 겹치게 배치 */
+    
+    /* ⭐⭐⭐핵심 수정: 카드들을 정확히 중앙으로 정렬!⭐⭐⭐ */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 요소의 절반 너비/높이만큼 되돌려서 정확히 중앙 정렬 */
+
     opacity: 0; /* 기본적으로 숨김 */
     transition: opacity 0.5s ease-in-out; /* 부드러운 전환 */
     
@@ -214,10 +220,10 @@ body {
 .bottom-centered-buttons .fixed-btn { /* 이 버튼들은 .fixed-btn 클래스도 가지지만, 여기서는 .bottom-centered-buttons의 자식으로 한 번 더 명시 */
     position: relative; /* 부모 .bottom-centered-buttons 기준으로 상대 위치 */
     min-width: 15%; /* ⭐⭐ 최소 너비 설정 ⭐⭐ */
-    max-width: 100%; /* 최대 너비도 설정 (너무 커지지 않도록) */
+    max-width: 25%; /* 최대 너비도 설정 (너무 커지지 않도록) */
     height: 4.6%; /* (50/1080)*100% */
     font-size: 1.9%;
-    padding: 3% 5%;
+    padding: 1% 2%;
     background-color: rgba(90, 62, 39, 0.8); /* 기본 트래블라운지 테마색 */
     transform: none; /* 이전 transform 제거 */
 }
