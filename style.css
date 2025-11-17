@@ -1,335 +1,299 @@
-/* 기본 리셋 및 폰트 설정 */
-html, body {
+/* ⭐⭐ 데스크탑의 style.css 파일에 적용해주세요! ⭐⭐ */
+
+/* --- 기본 & 공통 스타일 --- */
+body {
     margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden; /* 스크롤바 숨기기 */
-    font-family: 'Noto Sans KR', sans-serif; /* 예시 폰트, 필요 시 구글 폰트 추가 */
-    background-color: #f8f8f8; /* 앱 배경색 */
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+    overflow: hidden; /* 전체 화면에서 스크롤 방지 */
 }
 
-/* 카드 컨테이너: 1:1 정사각형 비율 고정 (최대 640px) */
+/* 카드 컨테이너 전체를 화면 중앙에 고정하고 여백(레터박싱) 생성 */
 #card-container {
+    position: relative;
     width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    aspect-ratio: 1 / 1; /* ⭐ 1:1 비율로 고정 ⭐ */
-    max-width: 380px; /* ⭐ 최대 너비 설정 ⭐ */
-    max-height: 380px; /* ⭐ 최대 높이 설정 ⭐ */
-    background-color: #eee;
-    position: relative;
+    overflow: hidden; /* 혹시 모를 내용물 넘침 방지 */
+    background-color: black; /* 카드뉴스 주변에 생길 레터박싱 색상 */
 }
 
 /* 개별 카드 스타일 */
 .card {
-    display: none;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    overflow: hidden;
-    border-radius: 15px;
+    position: absolute; /* 카드들을 겹치게 배치 */
+    opacity: 0; /* 기본적으로 숨김 */
+    transition: opacity 0.5s ease-in-out; /* 부드러운 전환 */
+    
+    /* ⭐⭐카드 콘텐츠 전체에 1:1 비율을 적용 ⭐⭐ */
+    width: min(100vw, 100vh); /* 가로세로 중 더 작은 쪽을 기준으로 1:1 */
+    height: min(100vw, 100vh); /* 위와 동일 */
+
+    display: flex; /* 내부 컨텐츠 중앙 정렬 */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* 콘텐츠가 이 고정된 박스 밖으로 나가지 않도록 */
+}
+
+.card.active {
+    opacity: 1; /* 활성 카드만 보임 */
+    z-index: 10; /* 활성 카드가 위에 오도록 */
+}
+
+.card-content {
+    position: relative;
+    width: 100%; /* 부모 .card의 고정된 크기를 꽉 채움 */
+    height: 100%; /* 부모 .card의 고정된 크기를 꽉 채움 */
+    display: flex;
     justify-content: center;
     align-items: center;
 }
-.card.active {
-    display: flex;
-}
 
-/* 카드 컨텐츠 영역 */
-.card-content {
-    width: 100%;
-    height: 100%;
-    position: relative; /* 버튼의 absolute 기준점 */
-    overflow: hidden;
-}
-
+/* 배경 이미지 스타일 */
 .full-bg-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
+    width: 100%; /* .card-content 크기를 꽉 채움 */
+    height: 100%; /* .card-content 크기를 꽉 채움 */
+    object-fit: cover; /* ⭐⭐ 이미지 비율을 유지하며 .card-content를 꽉 채움 (잘려도 좋으니 빈 공간 없음) ⭐⭐ */
+    display: block;
 }
 
-/* 텍스트가 이미지 위에 디자인되어있다고 가정하고 숨김 처리 */
-.hidden-text {
-    display: none;
-}
-
-/* --- [핵심] 오버레이 요소들 (버튼, 링크 등) 공통 스타일 --- */
-/* 모든 오버레이 요소의 부모 컨테이너 */
+/* 텍스트 및 버튼을 위한 오버레이 요소들 */
 .overlay-elements {
     position: absolute;
+    width: 100%; /* .card-content 기준 */
+    height: 100%; /* .card-content 기준 */
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    pointer-events: none; /* 이 div 자체는 클릭 불가. 안의 요소만 클릭되도록 */
+    pointer-events: none; /* 기본적으로 div는 클릭 무시 */
 }
 
-/* ⭐ [핵심] 모든 `overlay-elements`의 자식 요소(버튼, 링크, QR 이미지)의 기본 스타일 ⭐ */
-.overlay-elements > * {
-    pointer-events: auto; /* 자식 요소들은 클릭 가능하게 */
-    position: absolute; /* 개별 요소 위치 지정을 위한 절대 위치 */
-    transform: translateX(-50%); /* X축 중앙 정렬을 위한 기본값 (left와 함께 사용) */
-    
-    /* 네가 마지막으로 준 공통 버튼 스타일 + 2번 버튼 스타일 통합 */
-    bottom: 10%; /* 너가 알려준 2번 다음버튼 bottom값 */
-    left: 50%;
-    width: 30%; /* 너가 알려준 2번 다음버튼 width값 */
-    height: 6%; /* 너가 알려준 2번 다음버튼 height값 */
-    font-size: 100%; /* 너가 알려준 2번 다음버튼 font-size값 */
-
-    padding: 3px 15px;
-    border-radius: 30px;
-    font-weight: 600;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    transition: background-color 0.3s ease;
-    border: none;
+/* 인라인 링크 텍스트 (이제 card2에서 삭제되었지만, 만약을 위해 스타일은 유지) */
+.inline-link-text {
+    position: absolute;
+    pointer-events: auto; /* 클릭 가능하게 */
+    background-color: rgba(90, 62, 39, 0.8); /* 트래블라운지 테마색, 투명도 */
+    color: white;
+    padding: 2% 4%; /* (1080x1080 디자인 기준) */
+    border-radius: 5px;
     cursor: pointer;
-    text-decoration: none; /* 기본 밑줄 제거 */
-    display: inline-block; /* 너비와 높이를 가지게 함 */
-    z-index: 10; /* 다른 요소보다 위에 오도록 */
-    line-height: normal; /* 폰트 라인 높이 초기화 */
-}
-
-/* 공통 버튼 색상 및 호버 이펙트 */
-/* `.next-btn`과 `#closePopup` (popup-card 내 닫기 버튼)은 기본 갈색 */
-.next-btn, #closePopup {
-    background-color: #5A3E27;
-    color: #fff;
-}
-.next-btn:hover, #closePopup:hover {
-    background-color: #7B553E;
-}
-
-
-/* --- [핵심] 개별 요소 스타일 (공통 스타일에서 벗어나는 경우만 정의!) --- */
-
-/* card2 (대상자 모집) - '트래블라운지는?' 텍스트 링크 */
-#card2 .inline-link-text {
-    bottom: -8%; /* ⭐ 네가 준 bottom 값 그대로! ⭐ */
-    left: 59%;     /* ⭐ 네가 준 left 값 그대로! ⭐ */
-    width: 38%;    /* ⭐ 네가 준 width 값 그대로! ⭐ */
-    height: 40px;  /* ⭐ [재수정] height를 고정 px 값으로 충분히 확보! ⭐ */
-                   /* 네 글씨와 밑줄이 다 들어갈 정도 (ex: 40px, 50px) */
-    font-size: 170%; /* ⭐ 네가 준 font-size 값 그대로! ⭐ */
-    
-    /* 글자색 투명 + 밑줄만 남기는 스타일 */
-    color: transparent; /* 글자 투명 */
-    text-decoration: none; /* 밑줄 제거 */
-    text-decoration-color: transparent; /* 혹시 모를 폰트 밑줄 색상 제거 */
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    display: inline-block;
-    z-index: 10;
-    line-height: normal; /* 라인 높이 초기화 */
-    position: relative; /* ⭐ [재수정] ::after 가상 요소의 기준점 (이거 중요!) ⭐ */
-}
-/* card2 .inline-link-text의 긴 밑줄 */
-#card2 .inline-link-text::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 5px; /* ⭐ (재수정) #card2 .inline-link-text 안에서 밑줄이 위치할 곳 ⭐ */
-                 /* 이 값을 개발자 도구로 조절해서 글씨 아래에 딱 오도록 맞춰봐! */
-    width: 100%; /* ⭐ (재수정) 부모 요소 (#card2 .inline-link-text)의 너비만큼! ⭐ */
-    height: 2px;
-    background-color: #8c4a2f; /* 밑줄 색상 */
-    z-index: -1; /* 텍스트 뒤에 */
-}
-
-
-/* card3 (회차별 체험 안내) - '다음' 버튼 */
-#card3 .next-btn {
-    bottom: 9%; /* ⭐ 네가 준 bottom 값 그대로! ⭐ */
-    left: 50%;
-    width: 30%; /* ⭐ 네가 준 width 값 그대로! ⭐ */
-    height: 7%; /* ⭐ 네가 준 height 값 그대로! ⭐ */
-    font-size: 100%; /* ⭐ 네가 준 font-size 값 그대로! ⭐ */
-}
-
-
-/* --- card4 (사전 신청) 버튼들 --- */
-/* ⭐ [핵심] 4번 카드의 '신청하러 가기' (투명 텍스트 링크 + 긴 밑줄) ⭐ */
-#card4 #applyLink { /* id로 정확하게 선택 */
-    bottom: -32%; /* ⭐ 네가 준 bottom 값 그대로! ⭐ */
-    left: 53%;
-    width: 40%; /* ⭐ 네가 준 width 값 그대로! ⭐ */
-    height: 40px; /* ⭐ 네가 준 height 값 그대로! ⭐ */
-    font-size: 100%; /* ⭐ 네가 준 font-size 값 그대로! ⭐ */
-    
-    /* ⭐ 2번 카드 inline-link-text와 동일한 투명 텍스트 & 밑줄 스타일 ⭐ */
-    color: transparent; /* 글자 투명 */
-    text-decoration: none; /* 기존 밑줄 제거 */
-    text-decoration-color: transparent; /* 혹시 모를 폰트 밑줄 색상 제거 */
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    display: inline-block;
-    z-index: 10;
-    line-height: normal; /* 라인 높이 초기화 */
-    position: relative; /* ::after 가상 요소의 기준점 */
-}
-/* card4 #applyLink의 긴 밑줄 */
-#card4 #applyLink::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 5px; /* ⭐ 밑줄 위치 조절! (#applyLink의 height 40px를 감안해서) ⭐ */
-    width: 150%; /* ⭐ (예시) 부모 요소인 #applyLink의 150% 길이. 개발자 도구로 조절! ⭐ */
-    height: 2px;
-    background-color: #8c4b2f; /* 네이버 색상과 어울리게! */
-    z-index: -1; /* 텍스트 뒤에 */
-}
-
-/* 4번 카드의 QR 코드 이미지 */
-#card4 .qr-code-img {
-    bottom: 17%; /* ⭐ (예시) QR 코드 이미지의 bottom 값 (수정 필요 시) ⭐ */
-    left: 56%;
-    width: 40%; /* ⭐ (예시) QR 이미지 크기 고정 ⭐ */
-    height: 40%; /* ⭐ (예시) 높이도 너비와 동일 (1:1 정사각형이니까) ⭐ */
-}
-
-/* 4번 카드의 '처음으로' 버튼 */
-#card4 #goToFirstBtn {
-    bottom: 2%; /* ⭐ (예시) '처음으로' 버튼의 bottom 값 (수정 필요 시) ⭐ */
-    left: 50%;
-    width: 30%; /* ⭐ (예시) 너비 조절 ⭐ */
-    height: 10%; /* ⭐ (예시) 높이 조절 ⭐ */
-    font-size: 100%; /* ⭐ (예시) 폰트 사이즈 조절 ⭐ */
-    background-color: #6a4e35; /* 시작 버튼이니까 좀 더 진한 갈색? */
-}
-
-
-/* --- [수정] card5 (트래블라운지는?) 팝업 스타일 --- */
-/* ⭐⭐⭐ [핵심 수정] card5 팝업을 위한 새로운 모달 스타일 ⭐⭐⭐ */
-.popup-modal-overlay {
-    display: none; /* 기본적으로 숨김 */
-    position: fixed; /* 뷰포트에 고정 */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* 반투명 배경 */
-    z-index: 9999; /* 모든 요소 위에 */
-    justify-content: center; /* 가로 중앙 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
-}
-
-.popup-modal-overlay.active { /* script.js에서 .active 클래스를 추가/제거해서 팝업을 보임/숨김 */
-    display: flex;
-}
-
-.popup-modal-content {
-    background-color: #fff; /* 팝업 배경 흰색 */
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    max-width: 500px; /* 팝업 최대 너비 */
-    width: 90vw; /* 뷰포트 너비의 90% */
-    max-height: 90vh; /* 팝포트 높이의 90% */
-    aspect-ratio: 1 / 1; /* ⭐ 1:1 비율 유지 (내용 많으면 스크롤) ⭐ */
-    overflow: hidden; /* ⭐ 팝업 창 내에서 내용이 넘치면 hidden (스크롤은 content에서) ⭐ */
-    position: relative; /* 내부 요소 위치 기준 */
-
-    display: flex; /* 내부 요소들을 flex로 정렬 */
-    flex-direction: column; /* 세로 정렬 */
-    justify-content: center; /* 세로 중앙 정렬 */
-    align-items: center; /* 가로 중앙 정렬 */
-    padding: 20px; /* 팝업 내부 여백 */
-}
-
-.popup-modal-bg-image { /* 팝업 내 배경 이미지 */
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-}
-
-.popup-text-content { /* 팝업 내 설명 텍스트 */
-    position: relative; /* 이미지 위로 올라오도록 */
-    z-index: 2;
-    color: #333;
-    font-size: 1.1em;
-    line-height: 1.6;
-    text-align: center;
-    padding: 0 10px; /* 좌우 여백 */
-    margin-bottom: 20px; /* 닫기 버튼과 여백 */
-}
-
-.close-popup-btn { /* 팝업 닫기 버튼 */
-    position: relative; /* 이미지 위로 올라오도록 */
-    z-index: 2;
-    bottom: -50%; /* 팝업창 하단에 붙이려면 조절 (relative라서) */
-    //padding: 8px 18px;//
-    background-color: #5A3E27;
-    color: #fff;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: 100%;
-    font-size: 100%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease;
+    font-size: 2.2%; /* (1080x1080 디자인 기준) */
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
     text-decoration: none;
-    display: inline-block;
-    min-width: 50px; /* 닫기 버튼 최소 너비 */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    /* 희주가 준 card2의 트래블라운지 텍스트 위치 예시 (1080x1080 디자인 기준) */
+    bottom: 18.5%;
+    left: 5%;
 }
-.close-popup-btn:hover {
+
+.inline-link-text:hover {
     background-color: #7B553E;
+    transform: translateY(-2px);
 }
-/* QR 코드 확대 모달 오버레이 */
-.modal-overlay {
+
+/* QR 코드 이미지 (버튼으로 대체되었으므로, 이제 클릭은 안 되지만 스타일은 필요할 수 있음) */
+#qrCodeImage {
+    position: absolute; /* 이젠 이 이미지는 오버레이되지 않을 수 있음 */
+    pointer-events: none; /* 클릭 안되도록 */
+    width: 16%;  /* (180/1080)*100% */
+    height: 16%; /* (180/1080)*100% */
+    bottom: 10%; /* (108/1080)*100% */
+    right: 5%;  /* (54/1080)*100% */
+    border: 0.5% solid white;
+    border-radius: 1%;
+    box-shadow: 0 0 1% rgba(0,0,0,0.5);
+    display: none; /* ⭐⭐기본적으로 숨겨서 버튼만 보이도록⭐⭐ */
+}
+
+/* --- 5가지 고정 버튼 (홈, 이전, 다음, 신청, 물음표) --- */
+.fixed-buttons {
+    position: absolute;
+    width: 100%; /* .card-content 기준 */
+    height: 100%; /* .card-content 기준 */
+    top: 0;
+    left: 0;
+    pointer-events: none; /* 기본적으로 컨테이너는 클릭 무시 */
+    z-index: 20; /* 카드 이미지와 오버레이 요소 위에 */
+}
+
+.fixed-btn {
+    position: absolute; /* 개별 버튼들은 여전히 절대 위치로 고정 */
+    pointer-events: auto; /* 버튼 자체는 클릭 가능하게 */
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 1.1% 1.8%; /* (1080x1080 기준) */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.8%; /* (1080x1080 기준) */
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+    text-decoration: none; /* a 태그일 경우 대비 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box; /* 패딩과 보더가 너비/높이에 포함되도록 */
+    
+    white-space: nowrap; 
+}
+
+.fixed-btn:hover:not(.disabled) {
+    background-color: rgba(0, 0, 0, 0.9);
+    transform: translateY(-2px);
+}
+
+.fixed-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.fixed-btn.hidden {
     display: none;
+}
+
+/* ⭐⭐⭐ 중요: 모든 fixed-btn 위치와 크기를 % 기준으로 재설정! (1080x1080px 디자인 기준) ⭐⭐⭐ */
+/* --- 상단 모서리/가장자리 버튼들 --- */
+.home-btn {
+    top: 1.8%; /* (20/1080)*100% */
+    left: 1%;  /* (10/1080)*100% */
+    width: 7.4%;  /* (80/1080)*100% */
+    height: 3.7%; /* (40/1080)*100% */
+    font-size: 1.4%;
+    background-color: rgba(90, 62, 39, 0.8);
+}
+
+.prev-btn {
+    top: 1.8%;
+    left: 10%;   /* (108/1080)*100% */
+    width: 3.7%; /* (40/1080)*100% */
+    height: 3.7%;
+    font-size: 2.2%;
+    padding: 0;
+}
+
+.next-btn {
+    top: 1.8%;
+    left: 15%; /* (162/1080)*100% */
+    width: 3.7%;
+    height: 3.7%;
+    font-size: 2.2%;
+    padding: 0;
+}
+
+.info-btn { /* 물음표 버튼 */
+    top: 1.8%;
+    right: 1%; /* (10/1080)*100% */
+    width: 3.7%;
+    height: 3.7%;
+    font-size: 2.2%;
+    padding: 0;
+    background-color: rgba(0, 123, 255, 0.8);
+}
+
+/* --- 하단 중앙 버튼들을 묶는 컨테이너 --- */
+.bottom-centered-buttons {
+    position: absolute;
+    bottom: 1.8%; /* (20/1080)*100% */
+    left: 50%;
+    transform: translateX(-50%); /* 중앙 정렬 */
+    display: flex; /* 내부 요소 나란히 배치 */
+    gap: 1.8%; /* 버튼 사이 간격 (20px / 1080px * 100%) */
+    pointer-events: auto; /* 이 그룹 내의 버튼 클릭 가능하게 */
+    flex-wrap: nowrap; /* ⭐⭐ 절대 줄바꿈 하지 않음 ⭐⭐ */
+    justify-content: center; /* 내부 버튼들도 중앙 정렬 */
+    align-items: center;
+}
+
+/* --- 하단 중앙에 나란히 배치되는 버튼들의 개별 스타일 --- */
+.bottom-centered-buttons .fixed-btn { /* 이 버튼들은 .fixed-btn 클래스도 가지지만, 여기서는 .bottom-centered-buttons의 자식으로 한 번 더 명시 */
+    position: relative; /* 부모 .bottom-centered-buttons 기준으로 상대 위치 */
+    min-width: 15%; /* ⭐⭐ 최소 너비 설정 ⭐⭐ */
+    max-width: 100%; /* 최대 너비도 설정 (너무 커지지 않도록) */
+    height: 4.6%; /* (50/1080)*100% */
+    font-size: 1.9%;
+    padding: 3% 5%;
+    background-color: rgba(90, 62, 39, 0.8); /* 기본 트래블라운지 테마색 */
+    transform: none; /* 이전 transform 제거 */
+}
+
+/* ⭐⭐⭐ 희주가 좋아했던 초록색 복구! (선택자를 더 구체적으로!) ⭐⭐⭐ */
+.bottom-centered-buttons .apply-btn { /* ⭐⭐ 여기 선택자를 더 구체적으로 바꿔서 우선순위 확보! ⭐⭐ */
+    background-color: rgba(40, 167, 69, 0.8); /* 신청하기는 초록색 */
+}
+
+.qr-code-btn {
+    background-color: rgba(255, 193, 7, 0.9); /* QR 확대하기는 노란색 계열 */
+    color: #333;
+}
+
+
+/* --- 팝업 모달 스타일 (card5, QR 코드) --- */
+.popup-modal-overlay, .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0,0,0,0.8);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none; /* 기본 숨김 */
     justify-content: center;
     align-items: center;
-    z-index: 9999;
-    cursor: pointer;
+    z-index: 200; /* 모든 것 위에 */
 }
-.modal-overlay.active {
-    display: flex;
-}
-#qr-modal-img {
-    max-width: 90vw;
-    max-height: 90vh;
-    object-fit: contain;
+
+.popup-modal-content {
+    background-color: #fff; /* 팝업창 자체 배경색 */
+    position: relative;
+    padding: 0; /* 배경 이미지가 있으므로 패딩 제거 */
     border-radius: 10px;
-
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    color: #333;
+    max-width: 90%; /* 팝업 자체도 이 크기를 넘어가지 않도록 */
+    max-height: 90%;
+    
+    /* ⭐⭐ 팝업도 1:1 고정 비율 적용! ⭐⭐ */
+    width: min(90vw, 90vh); /* 가로세로 중 더 작은 쪽을 기준으로 1:1 */
+    height: min(90vw, 90vh); /* 위와 동일 */
+    
+    overflow: hidden; /* 이미지 오버플로우 방지 */
 }
 
+.popup-modal-bg-image {
+    width: 100%; /* 팝업창 크기를 꽉 채움 */
+    height: 100%; /* 팝업창 크기를 꽉 채움 */
+    object-fit: cover; /* ⭐⭐ 이미지 비율을 유지하며 팝업창 꽉 채움 (빈 공간 없음) ⭐⭐ */
+    display: block;
+}
 
+.close-popup-btn {
+    position: absolute;
+    /* ⭐⭐ 팝업창 기준 퍼센티지 재계산 (1080x1080 디자인 기준) ⭐⭐ */
+    top: 1.8%;   /* (20/1080)*100% */
+    right: 1.5%; /* (16/1080)*100% */
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 1% 1.5%;
+    cursor: pointer;
+    font-size: 1.1%;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
 
+.close-popup-btn:hover {
+    background-color: rgba(255, 0, 0, 1);
+}
 
+/* QR 모달 이미지 스타일 */
+#qr-modal-img {
+    max-width: 90%; /* 모달창의 90% */
+    max-height: 90%; /* 모달창의 90% */
+    object-fit: contain;
+}
