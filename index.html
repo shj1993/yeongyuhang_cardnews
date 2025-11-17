@@ -1,10 +1,13 @@
+<!-- 클라이언트에게 넘길 최종 카드뉴스 뷰어 파일 -->
+<!-- ⭐⭐ 데스크탑의 client/public/index.html 파일에 적용해주세요! ⭐⭐ -->
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영주행 트래블라운지 카드뉴스</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> <!-- 현재 파일 기준으로 style.css 연결 -->
 </head>
 <body>
 
@@ -13,8 +16,19 @@
         <div id="card1" class="card active">
             <div class="card-content">
                 <img src="card1-bg.png" alt="영주행 트래블라운지 11월 깜짝체험 이벤트" class="full-bg-image">
-                <!-- 텍스트는 이미지 안에 디자인되어 있다고 가정. 필요하면 p 태그로 추가 -->
                 <p class="hidden-text">11월 영주행 트래블라운지 깜짝체험 이벤트</p>
+            </div>
+            <!-- ⭐⭐⭐ 5가지 고정 버튼 (트래블라운지 버튼은 card1에 위치, 하단 센터에) ⭐⭐⭐ -->
+            <div class="fixed-buttons">
+                <button id="homeBtn1" class="fixed-btn home-btn" data-next="card1">홈</button>
+                <button id="prevBtn1" class="fixed-btn prev-btn" data-prev-action="none"><</button>
+                <button id="nextBtn1" class="fixed-btn next-btn" data-next="card2">></button>
+                <button id="infoBtn1" class="fixed-btn info-btn">?</button>
+                <div class="bottom-centered-buttons"> <!-- 하단 중앙 그룹 -->
+                    <button id="traveloungeBtn1" class="fixed-btn travelounge-btn">트래블라운지</button>
+                    <a href="#" class="fixed-btn apply-btn hidden">신청하기</a> <!-- card1에는 숨김 -->
+                    <button id="qrCodeBtn1" class="fixed-btn qr-code-btn hidden">QR 확대하기</button> <!-- card1에는 숨김 -->
+                </div>
             </div>
         </div>
 
@@ -23,9 +37,19 @@
             <div class="card-content">
                 <img src="card2-bg.png" alt="대상자 모집 안내" class="full-bg-image">
                 <div class="overlay-elements">
-                    <!-- 예시: 텍스트는 배경 이미지에 포함, 버튼만 별도로 배치 -->
-                    <span id="travelLoungeText" class="inline-link-text">트래블라운지</span>
-                    <button class="next-btn btn-pos-bottom" data-next="card3">체험 안내</button>
+                    <!-- card2의 travelLoungeText2는 이제 삭제됨 -->
+                </div>
+            </div>
+            <!-- ⭐⭐⭐ 5가지 고정 버튼 ⭐⭐⭐ -->
+            <div class="fixed-buttons">
+                <button id="homeBtn2" class="fixed-btn home-btn" data-next="card1">홈</button>
+                <button id="prevBtn2" class="fixed-btn prev-btn" data-next="card1"><</button>
+                <button id="nextBtn2" class="fixed-btn next-btn" data-next="card3">></button>
+                <button id="infoBtn2" class="fixed-btn info-btn">?</button>
+                <div class="bottom-centered-buttons"> <!-- 하단 중앙 그룹 -->
+                    <button id="traveloungeBtn2" class="fixed-btn travelounge-btn hidden">트래블라운지</button>
+                    <a href="#" class="fixed-btn apply-btn hidden">신청하기</a>
+                    <button id="qrCodeBtn2" class="fixed-btn qr-code-btn hidden">QR 확대하기</button>
                 </div>
             </div>
         </div>
@@ -35,7 +59,19 @@
             <div class="card-content">
                 <img src="card3-bg.png" alt="회차별 체험 안내" class="full-bg-image">
                 <div class="overlay-elements">
-                    <button class="next-btn btn-pos-bottom" data-next="card4">신청 안내</button>
+                    <!-- 별도 요소 없음 -->
+                </div>
+            </div>
+            <!-- ⭐⭐⭐ 5가지 고정 버튼 ⭐⭐⭐ -->
+            <div class="fixed-buttons">
+                <button id="homeBtn3" class="fixed-btn home-btn" data-next="card1">홈</button>
+                <button id="prevBtn3" class="fixed-btn prev-btn" data-next="card2"><</button>
+                <button id="nextBtn3" class="fixed-btn next-btn" data-next="card4">></button>
+                <button id="infoBtn3" class="fixed-btn info-btn">?</button>
+                <div class="bottom-centered-buttons"> <!-- 하단 중앙 그룹 -->
+                    <button id="traveloungeBtn3" class="fixed-btn travelounge-btn hidden">트래블라운지</button>
+                    <a href="#" class="fixed-btn apply-btn hidden">신청하기</a>
+                    <button id="qrCodeBtn3" class="fixed-btn qr-code-btn hidden">QR 확대하기</button>
                 </div>
             </div>
         </div>
@@ -45,24 +81,31 @@
             <div class="card-content">
                 <img src="card4-bg.png" alt="사전 신청 안내" class="full-bg-image">
                 <div class="overlay-elements">
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdJ-d4k50DGa8NYN2TTag0hqIdqDmCc_4BI_F5-r0NYgyuTNA/viewform" target="_blank" id="applyLink" class="inline-link-text">
-                        신청하러 가기
-                    </a>
-                    <img src="qr-code.jpg" alt="사전 신청 QR 코드" id="qrCode" class="qr-code-img">
-                    <button id="goToFirstBtn" class="next-btn">처음으로</button>
+                    <img src="qr-code.jpg" alt="사전 신청 QR 코드" id="qrCodeImage" class="qr-code-img hidden"> <!-- QR 이미지 자체는 숨기고 버튼이 뜨도록 -->
+                </div>
+            </div>
+            <!-- ⭐⭐⭐ 5가지 고정 버튼 (신청하기/QR 확대하기 버튼은 card4에서만 active, 하단 센터 나란히) ⭐⭐⭐ -->
+            <div class="fixed-buttons">
+                <button id="homeBtn4" class="fixed-btn home-btn" data-next="card1">홈</button>
+                <button id="prevBtn4" class="fixed-btn prev-btn" data-next="card3"><</button>
+                <button id="nextBtn4" class="fixed-btn next-btn" data-next="card1">></button> <!-- 비활성화 예정 -->
+                <button id="infoBtn4" class="fixed-btn info-btn">?</button>
+                <div class="bottom-centered-buttons"> <!-- 하단 중앙 그룹 -->
+                    <button id="traveloungeBtn4" class="fixed-btn travelounge-btn hidden">트래블라운지</button>
+                    <button id="qrCodeBtn4" class="fixed-btn qr-code-btn">QR 확대하기</button> <!-- 4번 카드에 QR 확대하기 버튼 -->
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdJ-d4k50DGa8NYN2TTag0hqIdqDmCc_4BI_F5-r0NYgyuTNA/viewform" target="_blank" id="applyLink" class="fixed-btn apply-btn">신청하기</a> <!-- 4번 카드에 신청 버튼 -->
                 </div>
             </div>
         </div>
 
-
-        <!-- ⭐⭐⭐ [핵심 수정] card5는 이제 일반 카드가 아니라 별도의 모달 팝업으로 분리! ⭐⭐⭐ -->
-        <div id="popup5-overlay" class="popup-modal-overlay"> <!-- 팝업 전체 배경 -->
-            <div id="card5-popup-content" class="popup-modal-content"> <!-- 실제 팝업 창 -->
-                <img src="card5-bg.png" alt="트래블라운지는?" class="popup-modal-bg-image"> <!-- 팝업 자체 배경 이미지 -->
+        <!-- ⭐⭐⭐ card5 팝업 모달 ⭐⭐⭐ -->
+        <div id="popup5-overlay" class="popup-modal-overlay">
+            <div id="card5-popup-content" class="popup-modal-content">
+                <img src="card5-bg.png" alt="트래블라운지는?" class="popup-modal-bg-image">
                 <button id="closePopup" class="close-popup-btn">닫기</button>
             </div>
         </div>
-    </div>
+    </div> <!-- #card-container 종료 -->
 
     <!-- QR 코드 확대 모달 -->
     <div id="qr-modal-overlay" class="modal-overlay">
@@ -71,9 +114,4 @@
 
     <script src="script.js"></script>
 </body>
-
 </html>
-
-
-
-
